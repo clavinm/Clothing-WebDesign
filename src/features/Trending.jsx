@@ -19,7 +19,7 @@ color: #ff6700;
 const CardContainer = styled.div`
   display: flex;
   justify-content: center;
-   
+  flex-wrap: wrap;
 `;
 
 const Card = styled.div`
@@ -29,6 +29,9 @@ const Card = styled.div`
   margin: 0 10px;
   padding: 20px;
   width: 300px;
+  @media (max-width: 768px) {
+    width: 100%; 
+  }
 `;
 
 const ProductImage = styled.img`

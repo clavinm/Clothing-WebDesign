@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 
 const FooterSection = styled.footer`
@@ -8,16 +7,30 @@ const FooterSection = styled.footer`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Logo = styled.div`
-    margin-left: 20px;
+  margin-left: 20px;
   font-weight: bold;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
 `;
 
 const CopyRight = styled.div`
   flex-grow: 1;
   text-align: center;
+
+  @media (max-width: 768px) {
+    text-align: left;
+    margin-top: 10px;
+  }
 `;
 
 const Links = styled.div`
@@ -25,12 +38,23 @@ const Links = styled.div`
   justify-content: flex-end;
   align-items: center;
   margin-right: 20px;
+
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    margin-right: 0;
+    margin-top: 10px;
+  }
 `;
 
 const Link = styled.a`
   color: white;
   text-decoration: none;
   margin-left: 20px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-right: 10px;
+  }
 `;
 
 export default function Footer() {

@@ -1,9 +1,23 @@
 * {
     margin: 0;
     padding: 0;
+ 
   }
   
   body {
     font-family: 'Roboto', sans-serif;
     background-color: #ff7900;
+    
+  }
+   @media screen and (max-width: 768px) {
+    body {
+      font-size: 16px;
+    }
+  }
+  
+  /* Styles for screens with a maximum width of 480px (e.g., mobile phones) */
+  @media screen and (max-width: 480px) {
+    body {
+      font-size: 14px;
+    }
   }

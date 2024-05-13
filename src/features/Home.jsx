@@ -1,52 +1,106 @@
-import './Home.css';
-import fashionImage1 from '../assets/card1.png'; // Import the image from assets folder
-import fashionImage2 from '../assets/card222.png'; // Import another image from assets folder
 import styled from 'styled-components';
+import fashionImage1 from '../assets/card1.png';
+import Row from '../components/Row';
+
+const HomeSection = styled.section`
+    background-color: #ff7900;
+    color: white;
+    padding: 5vw 5vw 10vw;
+`;
+
+const HomeHeader = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5vw;
+`;
+
+const HeaderRight = styled.div`
+    text-align: center;
+    margin-top: 2vw;
+    line-height: 1.5;
+`;
+
+const ShopNowButton = styled.button`
+    background-color: black;
+    color: #ff7900;
+    border: none;
+    padding: 2vw 4vw;
+    border-radius: 2vw;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 2vw;
+`;
+
+const CardsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const Card = styled.div`
+    width: 100%;
+    max-width: 50vw;
+    background-color: #fff;
+    padding: 2vw;
+    border-radius: 10px;
+    box-shadow: 0 2vw 4vw rgba(0, 0, 0, 0.1);
+`;
+
+const ProductImage = styled.img`
+    width: 100%;
+    border-radius: 2vw;
+   
+`;
 
 const StyledH1 = styled.h1`
     text-align: center;
     font-weight: bold;
     color: black;
-    font-size: 10em; 
+    font-size: 7vw;
     font-style: italic;
     text-transform: uppercase; 
+    margin-bottom: 3vw;
 `;
+
 const StyledH2 = styled.h2`
-    margin-top: 50px;
     text-align: center;
     color: black;
-    font-size: 3em; 
+    font-size: 3vw;
     font-style: italic;
+    margin-top: 5vw;
 `;
+
 const BlackBackground = styled.span`
-border-radius: 20px;
-color: #ff7600;
-  background-color: black;
+    border-radius: 2vw;
+    color: #ff7600;
+    background-color: black;
 `;
+
 export default function Home() {
     return (
-        <section className="home-section">
-            <div className="home-header">
-                <div className="header-left">
-                    <StyledH1>Fashion</StyledH1> 
-                </div>
-                <div className="header-right">
+        <HomeSection>
+            <HomeHeader>
+                <StyledH1>Fashion</StyledH1>
+                <HeaderRight>
                     <div>New Summer Collection</div>
-                    <div className="subtext">Get now and empty your summer vacation</div>
-                    <button className="shop-now-button">Shop Now</button>
-                </div>
-            </div>
-            <div className="cards-container">
-                <div className="card1">
-                    <img src={fashionImage1} alt="Fashion Image 1" />
-                </div>
-                <div className="card">
-                    <img src={fashionImage2} alt="Fashion Image 2" />
-                </div>
-            </div>
+                    <div>Get now and empty your summer vacation</div>
+                    <ShopNowButton>Shop Now</ShopNowButton>
+                </HeaderRight>
+            </HomeHeader>
+            <CardsContainer>
+                <Row>
+                    <Card>
+                        <ProductImage src={fashionImage1} alt="Fashion Image 1" />
+                    </Card>
+                    <Card>
+                        <ProductImage src={fashionImage1} alt="Fashion Image 2" />
+                    </Card>
+                </Row>
+            </CardsContainer>
             <div className="desc">
-                <StyledH2>Where <BlackBackground>fashion takes</BlackBackground> the helm,and you embark on a journey</StyledH2>
+                <StyledH2>Where <BlackBackground>fashion takes</BlackBackground> the helm, and you embark on a journey</StyledH2>
             </div>
-        </section>
+        </HomeSection>
     );
 }

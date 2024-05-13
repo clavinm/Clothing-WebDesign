@@ -6,22 +6,21 @@ const TrendingSection = styled.section`
   text-align: center;
   background-color: black;
   color: white;
-  padding: 40px 0;
+  padding: 40px 20px;
 `;
 
 const Heading = styled.h2`
 color: #ff6700;
-  font-size: 60px;
+font-size: 3.5vw;
   text-transform: capitalize;
-  margin-bottom: 40px;
+  margin-bottom: 3vw;
 `;
 
 const CardContainer = styled.div`
-    margin-left: 10px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-   
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  justify-content: center;
 `;
 
 const Card = styled.div`
@@ -41,12 +40,12 @@ const ProductImage = styled.img`
 `;
 const ProductName = styled.p`
   color: #ff6700;
-  font-size: 24px;
+  font-size: 3vw;
   margin-top: 10px;
 `;
 const Horizontal = styled.hr`
   border: 0.5px solid #ff6700;
-  margin: 10px 0;
+  margin: 2vw 0;
 `;
 const Button = styled.button`
     background-color: black;
