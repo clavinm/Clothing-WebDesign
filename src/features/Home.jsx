@@ -90,7 +90,7 @@ export default function Home() {
             <HomeHeader>
                 <StyledH1>Fashionn</StyledH1>
                 <HeaderRight>
-                    <div>New Summer Collection</div>
+                    <div>New Summer summer collection Collection</div>
                     <div>Get now and empty your summer vacation</div>
                     <ShopNowButton id="installButton">Install</ShopNowButton>
                     <ShopNowButton id="imageCaptureButton" onClick={handleImageCaptureClick}>
