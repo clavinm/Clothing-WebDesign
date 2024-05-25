@@ -42,6 +42,11 @@ const Button = styled.button`
   }
 `;
 
+const Select = styled.select`
+  padding: 10px;
+  margin-bottom: 20px;
+`;
+
 const ImageContainer = styled.div`
   margin-bottom: 20px;
 `;
@@ -75,10 +80,30 @@ const ImageCapturePage = () => {
   const [videoURL, setVideoURL] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [cameraDevices, setCameraDevices] = useState([]);
+  const [selectedCamera, setSelectedCamera] = useState('');
 
   useEffect(() => {
+    const fetchCameras = async () => {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      setCameraDevices(videoDevices);
+      if (videoDevices.length > 0) {
+        setSelectedCamera(videoDevices[0].deviceId);
+      }
+    };
+    fetchCameras();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCamera) {
+      startVideoStream(selectedCamera);
+    }
+  }, [selectedCamera]);
+
+  const startVideoStream = (deviceId) => {
     const videoElement = videoRef.current;
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices.getUserMedia({ video: { deviceId } })
       .then((stream) => {
         videoElement.srcObject = stream;
         const recorder = new MediaRecorder(stream);
@@ -101,7 +126,7 @@ const ImageCapturePage = () => {
       .catch((err) => {
         console.error('Error accessing the camera: ', err);
       });
-  }, []);
+  };
 
   const handleCaptureClick = () => {
     const videoElement = videoRef.current;
@@ -124,6 +149,11 @@ const ImageCapturePage = () => {
       setIsRecording(true);
     }
   };
+
+  const handleCameraChange = (event) => {
+    setSelectedCamera(event.target.value);
+  };
+
   const cancelImageCapture = () => {
     setImageURL(null);
   };
@@ -131,9 +161,17 @@ const ImageCapturePage = () => {
   const cancelVideoCapture = () => {
     setVideoURL(null);
   };
+
   return (
     <Container>
       <Title>Image and Video Capture</Title>
+      <Select value={selectedCamera} onChange={handleCameraChange}>
+        {cameraDevices.map(device => (
+          <option key={device.deviceId} value={device.deviceId}>
+            {device.label || `Camera ${device.deviceId}`}
+          </option>
+        ))}
+      </Select>
       <VideoContainer>
         <Video ref={videoRef} autoPlay></Video>
       </VideoContainer>
@@ -144,13 +182,13 @@ const ImageCapturePage = () => {
         </Button>
       </ButtonContainer>
       <ImageContainer ref={imageContainerRef}>
-      {imageURL && (
-      <>
-        <Image src={imageURL} alt="Captured Image" />
-        <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
-        <DownloadLink onClick={cancelImageCapture}>Cancel</DownloadLink>
-      </>
-      )}
+        {imageURL && (
+          <>
+            <Image src={imageURL} alt="Captured Image" />
+            <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
+            <DownloadLink onClick={cancelImageCapture}>Cancel</DownloadLink>
+          </>
+        )}
       </ImageContainer>
       <Canvas ref={canvasRef}></Canvas>
       {videoURL && (
