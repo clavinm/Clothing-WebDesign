@@ -11,32 +11,36 @@
     <title>Vite + React</title>
   </head>
   <body>
-    <div id="root">
-    </div>
-    <button id="installButton">Install App</button>
+    <div id="root"></div>
+    <button id="installButton">Install</button>
     <script type="module" src="/src/main.jsx"></script>
     <script>
       let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const installButton = document.getElementById('installButton');
-  installButton.style.display = 'block';
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const installButton = document.getElementById('installButton');
+        installButton.style.display = 'block';
 
-  installButton.addEventListener('click', async () => {
-    installButton.style.display = 'none';
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    deferredPrompt = null;
-  });
-});
-
+        installButton.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              installButton.textContent = 'Installed';
+              console.log('User accepted the install prompt');
+            } else {
+              installButton.textContent = 'Cannot Install';
+              console.log('User dismissed the install prompt');
+            }
+            deferredPrompt = null;
+          } else {
+            installButton.textContent = 'Cannot Install';
+            console.log('No install prompt available');
+          }
+        });
+      });
     </script>
   </body>
 </html>
