@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './features/Home';
 import ImageCapturePage from './features/ImageCapturePage';
+import Notifications from './features/Notifications';
 // import Trending from "./features/Trending"
 // import Latest from "./features/Latest"
 // import Navbar from "./features/navbar"
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/capture" element={<ImageCapturePage />} />
+        <Route path="/notification" element={<Notifications />} />
       </Routes>
     </Router>
   );

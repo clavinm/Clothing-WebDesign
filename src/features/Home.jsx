@@ -1,8 +1,9 @@
 // import React from 'react';
 import styled from 'styled-components';
-import fashionImage1 from '../assets/card1.png';
-import Row from '../components/Row';
+// import fashionImage1 from '../assets/card1.png';
+// import Row from '../components/Row';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const HomeSection = styled.section`
   background-color: #ff7900;
@@ -32,27 +33,28 @@ const ShopNowButton = styled.button`
   cursor: pointer;
   font-weight: bold;
   margin-top: 2vw;
+  text-decoration: none;
 `;
 
-const CardsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+// const CardsContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+// `;
 
-const Card = styled.div`
-  width: 100%;
-  max-width: 50vw;
-  background-color: #fff;
-  padding: 2vw;
-  border-radius: 10px;
-  box-shadow: 0 2vw 4vw rgba(0, 0, 0, 0.1);
-`;
+// const Card = styled.div`
+//   width: 100%;
+//   max-width: 50vw;
+//   background-color: #fff;
+//   padding: 2vw;
+//   border-radius: 10px;
+//   box-shadow: 0 2vw 4vw rgba(0, 0, 0, 0.1);
+// `;
 
-const ProductImage = styled.img`
-  width: 100%;
-  border-radius: 2vw;
-`;
+// const ProductImage = styled.img`
+//   width: 100%;
+//   border-radius: 2vw;
+// `;
 
 const StyledH1 = styled.h1`
   text-align: center;
@@ -64,19 +66,19 @@ const StyledH1 = styled.h1`
   margin-bottom: 3vw;
 `;
 
-const StyledH2 = styled.h2`
-  text-align: center;
-  color: black;
-  font-size: 3vw;
-  font-style: italic;
-  margin-top: 5vw;
-`;
+// const StyledH2 = styled.h2`
+//   text-align: center;
+//   color: black;
+//   font-size: 3vw;
+//   font-style: italic;
+//   margin-top: 5vw;
+// `;
 
-const BlackBackground = styled.span`
-  border-radius: 2vw;
-  color: #ff7600;
-  background-color: black;
-`;
+// const BlackBackground = styled.span`
+//   border-radius: 2vw;
+//   color: #ff7600;
+//   background-color: black;
+// `;
 
 export default function Home() {
   const navigate = useNavigate();
@@ -96,9 +98,10 @@ export default function Home() {
           <ShopNowButton id="imageCaptureButton" onClick={handleImageCaptureClick}>
             Image Capture
           </ShopNowButton>
+          <ShopNowButton as={Link} to="/notification">Notification</ShopNowButton> 
         </HeaderRight>
       </HomeHeader>
-      <CardsContainer>
+      {/* <CardsContainer>
         <Row>
           <Card>
             <ProductImage src={fashionImage1} alt="Fashion Image 1" />
@@ -112,7 +115,7 @@ export default function Home() {
         <StyledH2>
           Where <BlackBackground>fashion takes</BlackBackground> the helm, and you embark on a journey
         </StyledH2>
-      </div>
+      </div> */}
     </HomeSection>
   );
 }
