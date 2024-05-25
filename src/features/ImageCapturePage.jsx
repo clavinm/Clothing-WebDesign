@@ -56,6 +56,7 @@ const DownloadLink = styled.a`
   margin-top: 10px;
   text-decoration: none;
   color: #007bff;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
@@ -123,7 +124,13 @@ const ImageCapturePage = () => {
       setIsRecording(true);
     }
   };
-
+  const cancelImageCapture = () => {
+    setImageURL(null);
+  };
+  
+  const cancelVideoCapture = () => {
+    setVideoURL(null);
+  };
   return (
     <Container>
       <Title>Image and Video Capture</Title>
@@ -141,6 +148,7 @@ const ImageCapturePage = () => {
       <>
         <Image src={imageURL} alt="Captured Image" />
         <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
+        <DownloadLink onClick={cancelImageCapture}>Cancel</DownloadLink>
       </>
       )}
       </ImageContainer>
@@ -149,6 +157,7 @@ const ImageCapturePage = () => {
         <div>
           <Video src={videoURL} controls></Video>
           <DownloadLink href={videoURL} download="captured-video.webm">Download Video</DownloadLink>
+          <DownloadLink onClick={cancelVideoCapture}>Cancel</DownloadLink>
         </div>
       )}
     </Container>
