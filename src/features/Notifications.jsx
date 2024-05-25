@@ -7,7 +7,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #ff7600;;
+  background-color: #ff7600;
   padding: 20px;
 `;
 
@@ -84,7 +84,10 @@ export default function Notifications() {
       body: notificationMessage,
     };
 
-    if ('serviceWorker' in navigator && 'showNotification' in ServiceWorkerRegistration.prototype) {
+    if (
+      'serviceWorker' in navigator &&
+      'showNotification' in ServiceWorkerRegistration.prototype
+    ) {
       navigator.serviceWorker.ready.then((registration) => {
         registration.showNotification(title, options);
       });

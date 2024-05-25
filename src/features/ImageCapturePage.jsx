@@ -86,7 +86,9 @@ const ImageCapturePage = () => {
   useEffect(() => {
     const fetchCameras = async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      const videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput'
+      );
       setCameraDevices(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
@@ -103,7 +105,8 @@ const ImageCapturePage = () => {
 
   const startVideoStream = (deviceId) => {
     const videoElement = videoRef.current;
-    navigator.mediaDevices.getUserMedia({ video: { deviceId } })
+    navigator.mediaDevices
+      .getUserMedia({ video: { deviceId } })
       .then((stream) => {
         videoElement.srcObject = stream;
         const recorder = new MediaRecorder(stream);
@@ -157,7 +160,7 @@ const ImageCapturePage = () => {
   const cancelImageCapture = () => {
     setImageURL(null);
   };
-  
+
   const cancelVideoCapture = () => {
     setVideoURL(null);
   };
@@ -166,7 +169,7 @@ const ImageCapturePage = () => {
     <Container>
       <Title>Image and Video Capture</Title>
       <Select value={selectedCamera} onChange={handleCameraChange}>
-        {cameraDevices.map(device => (
+        {cameraDevices.map((device) => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label || `Camera ${device.deviceId}`}
           </option>
@@ -185,7 +188,9 @@ const ImageCapturePage = () => {
         {imageURL && (
           <>
             <Image src={imageURL} alt="Captured Image" />
-            <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
+            <DownloadLink href={imageURL} download="captured-image.png">
+              Download Image
+            </DownloadLink>
             <DownloadLink onClick={cancelImageCapture}>Cancel</DownloadLink>
           </>
         )}
@@ -194,7 +199,9 @@ const ImageCapturePage = () => {
       {videoURL && (
         <div>
           <Video src={videoURL} controls></Video>
-          <DownloadLink href={videoURL} download="captured-video.webm">Download Video</DownloadLink>
+          <DownloadLink href={videoURL} download="captured-video.webm">
+            Download Video
+          </DownloadLink>
           <DownloadLink onClick={cancelVideoCapture}>Cancel</DownloadLink>
         </div>
       )}
