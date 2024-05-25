@@ -171,6 +171,7 @@ const ImageCapturePage = () => {
             {device.label || `Camera ${device.deviceId}`}
           </option>
         ))}
+        
       </Select>
       <VideoContainer>
         <Video ref={videoRef} autoPlay></Video>
