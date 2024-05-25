@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import fashionImage1 from '../assets/card1.png';
 import Row from '../components/Row';
@@ -78,6 +79,11 @@ const BlackBackground = styled.span`
 `;
 
 export default function Home() {
+  const history = useHistory();
+
+  const handleImageCaptureClick = () => {
+    history.push('/capture');
+  };
     return (
         <HomeSection>
             <HomeHeader>
@@ -85,8 +91,11 @@ export default function Home() {
                 <HeaderRight>
                     <div>New Summer Collection</div>
                     <div>Get now and empty your summer vacation</div>
-                    <ShopNowButton id="installButton">Install Application</ShopNowButton>
-                    <ShopNowButton id="imageCaptureButton">Image Capture</ShopNowButton>
+                    <ShopNowButton id="installButton">Install</ShopNowButton>
+                    <ShopNowButton id="imageCaptureButton" onClick={handleImageCaptureClick}>
+                        Image Capture
+                    </ShopNowButton>
+                    <ShopNowButton id="triggerInstall">Install Now</ShopNowButton>
                 </HeaderRight>
             </HomeHeader>
             <CardsContainer>
