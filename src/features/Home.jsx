@@ -95,15 +95,10 @@ export default function Home() {
           <div>New Summer Collection</div>
           <div>Get now and empty your summer vacation</div>
           <ShopNowButton id="installButton">Install</ShopNowButton>
-          <ShopNowButton
-            id="imageCaptureButton"
-            onClick={handleImageCaptureClick}
-          >
+          <ShopNowButton id="imageCaptureButton" onClick={handleImageCaptureClick}>
             Image Capture
           </ShopNowButton>
-          <ShopNowButton as={Link} to="/notification">
-            Notification
-          </ShopNowButton>
+          <ShopNowButton as={Link} to="/notification">Notification</ShopNowButton> 
         </HeaderRight>
       </HomeHeader>
       {/* <CardsContainer>
@@ -124,3 +119,5 @@ export default function Home() {
     </HomeSection>
   );
 }
+
+
