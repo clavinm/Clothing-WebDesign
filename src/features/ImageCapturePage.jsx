@@ -82,14 +82,19 @@ const ImageCapturePage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [cameraDevices, setCameraDevices] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchCameras = async () => {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      setCameraDevices(videoDevices);
-      if (videoDevices.length > 0) {
-        setSelectedCamera(videoDevices[0].deviceId);
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        setCameraDevices(videoDevices);
+        if (videoDevices.length > 0) {
+          setSelectedCamera(videoDevices[0].deviceId);
+        }
+      } catch (err) {
+        setError('Error fetching camera devices: ' + err.message);
       }
     };
     fetchCameras();
@@ -101,31 +106,30 @@ const ImageCapturePage = () => {
     }
   }, [selectedCamera]);
 
-  const startVideoStream = (deviceId) => {
+  const startVideoStream = async (deviceId) => {
     const videoElement = videoRef.current;
-    navigator.mediaDevices.getUserMedia({ video: { deviceId } })
-      .then((stream) => {
-        videoElement.srcObject = stream;
-        const recorder = new MediaRecorder(stream);
-        setMediaRecorder(recorder);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId } });
+      videoElement.srcObject = stream;
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
 
-        const chunks = [];
+      const chunks = [];
 
-        recorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            chunks.push(event.data);
-          }
-        };
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
 
-        recorder.onstop = () => {
-          const blob = new Blob(chunks, { type: 'video/webm' });
-          const url = URL.createObjectURL(blob);
-          setVideoURL(url);
-        };
-      })
-      .catch((err) => {
-        console.error('Error accessing the camera: ', err);
-      });
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        setVideoURL(url);
+      };
+    } catch (err) {
+      setError('Error accessing the camera: ' + err.message);
+    }
   };
 
   const handleCaptureClick = () => {
@@ -144,8 +148,7 @@ const ImageCapturePage = () => {
       mediaRecorder.stop();
       setIsRecording(false);
     } else {
-      const recorder = mediaRecorder;
-      recorder.start();
+      mediaRecorder.start();
       setIsRecording(true);
     }
   };
@@ -157,7 +160,7 @@ const ImageCapturePage = () => {
   const cancelImageCapture = () => {
     setImageURL(null);
   };
-  
+
   const cancelVideoCapture = () => {
     setVideoURL(null);
   };
@@ -165,13 +168,13 @@ const ImageCapturePage = () => {
   return (
     <Container>
       <Title>Image and Video Capture</Title>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <Select value={selectedCamera} onChange={handleCameraChange}>
         {cameraDevices.map(device => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label || `Camera ${device.deviceId}`}
           </option>
         ))}
-        
       </Select>
       <VideoContainer>
         <Video ref={videoRef} autoPlay></Video>
