@@ -5,13 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="1800x180" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180" />
     <link rel="mask-icon" href="/mask-icon.svg" color="#FFFFFF">
     <meta name="theme-color" content="#ffffff">
     <title>Vite + React</title>
   </head>
   <body>
     <div id="root"></div>
+    <button id="installButton">Install</button>
+    <button id="imageCaptureButton">Image Capture</button>
+    <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;">
+
+    <div id="customInstallPrompt">
+      <p>Install our app for a better experience!</p>
+      <button id="triggerInstall">Install Now</button>
+    </div>
+
     <script type="module" src="/src/main.jsx"></script>
     <script>
       let deferredPrompt;
@@ -22,16 +31,47 @@
         const installButton = document.getElementById('installButton');
         installButton.style.display = 'block';
 
-        installButton.addEventListener('click', async () => {
+        installButton.addEventListener('click', () => {
+          const customInstallPrompt = document.getElementById('customInstallPrompt');
+          customInstallPrompt.style.display = 'block';
+        });
+
+        const triggerInstall = document.getElementById('triggerInstall');
+        triggerInstall.addEventListener('click', async () => {
           if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
+            const installButton = document.getElementById('installButton');
+            const customInstallPrompt = document.getElementById('customInstallPrompt');
+            customInstallPrompt.style.display = 'none';
+            if (outcome === 'accepted') {
+              installButton.textContent = 'Installed';
+              console.log('User accepted the install prompt');
+            } else {
+              installButton.textContent = 'Cannot Install';
+              console.log('User dismissed the install prompt');
+            }
             deferredPrompt = null;
-          } else {
-            installButton.textContent = 'Cannot Install';
-            console.log('No install prompt available');
           }
         });
+      });
+
+      // Image Capture
+      const imageCaptureButton = document.getElementById('imageCaptureButton');
+      const fileInput = document.getElementById('fileInput');
+
+      imageCaptureButton.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.style.maxWidth = '100%';
+          document.body.appendChild(img);
+        }
       });
     </script>
   </body>
