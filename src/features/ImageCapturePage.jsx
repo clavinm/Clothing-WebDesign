@@ -42,10 +42,10 @@ const Button = styled.button`
   }
 `;
 
-const Select = styled.select`
-  padding: 10px;
-  margin-bottom: 20px;
-`;
+// const Select = styled.select`
+//   padding: 10px;
+//   margin-bottom: 20px;
+// `;
 
 const ImageContainer = styled.div`
   margin-bottom: 20px;
@@ -80,21 +80,17 @@ const ImageCapturePage = () => {
   const [videoURL, setVideoURL] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [cameraDevices, setCameraDevices] = useState([]);
+  // const [cameraDevices, setCameraDevices] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchCameras = async () => {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        setCameraDevices(videoDevices);
-        if (videoDevices.length > 0) {
-          setSelectedCamera(videoDevices[0].deviceId);
-        }
-      } catch (err) {
-        setError('Error fetching camera devices: ' + err.message);
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log(devices);
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      // setCameraDevices(videoDevices);
+      if (videoDevices.length > 0) {
+        setSelectedCamera(videoDevices[0].deviceId);
       }
     };
     fetchCameras();
@@ -106,30 +102,31 @@ const ImageCapturePage = () => {
     }
   }, [selectedCamera]);
 
-  const startVideoStream = async (deviceId) => {
+  const startVideoStream = (deviceId) => {
     const videoElement = videoRef.current;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId } });
-      videoElement.srcObject = stream;
-      const recorder = new MediaRecorder(stream);
-      setMediaRecorder(recorder);
+    navigator.mediaDevices.getUserMedia({ video: { deviceId } })
+      .then((stream) => {
+        videoElement.srcObject = stream;
+        const recorder = new MediaRecorder(stream);
+        setMediaRecorder(recorder);
 
-      const chunks = [];
+        const chunks = [];
 
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunks.push(event.data);
-        }
-      };
+        recorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            chunks.push(event.data);
+          }
+        };
 
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        setVideoURL(url);
-      };
-    } catch (err) {
-      setError('Error accessing the camera: ' + err.message);
-    }
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          setVideoURL(url);
+        };
+      })
+      .catch((err) => {
+        console.error('Error accessing the camera: ', err);
+      });
   };
 
   const handleCaptureClick = () => {
@@ -148,19 +145,20 @@ const ImageCapturePage = () => {
       mediaRecorder.stop();
       setIsRecording(false);
     } else {
-      mediaRecorder.start();
+      const recorder = mediaRecorder;
+      recorder.start();
       setIsRecording(true);
     }
   };
 
-  const handleCameraChange = (event) => {
-    setSelectedCamera(event.target.value);
-  };
+  // const handleCameraChange = (event) => {
+  //   setSelectedCamera(event.target.value);
+  // };
 
   const cancelImageCapture = () => {
     setImageURL(null);
   };
-
+  
   const cancelVideoCapture = () => {
     setVideoURL(null);
   };
@@ -168,14 +166,13 @@ const ImageCapturePage = () => {
   return (
     <Container>
       <Title>Image and Video Capture</Title>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <Select value={selectedCamera} onChange={handleCameraChange}>
+      {/* <Select value={selectedCamera} onChange={handleCameraChange}>
         {cameraDevices.map(device => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label || `Camera ${device.deviceId}`}
           </option>
         ))}
-      </Select>
+      </Select> */}
       <VideoContainer>
         <Video ref={videoRef} autoPlay></Video>
       </VideoContainer>
