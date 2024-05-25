@@ -86,6 +86,7 @@ export default function Home() {
                     <div>New Summer Collection</div>
                     <div>Get now and empty your summer vacation</div>
                     <ShopNowButton id="installButton">Install Application</ShopNowButton>
+                    <ShopNowButton id="imageCaptureButton">Image Capture</ShopNowButton>
                 </HeaderRight>
             </HomeHeader>
             <CardsContainer>
