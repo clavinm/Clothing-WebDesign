@@ -88,7 +88,7 @@ export default function Home() {
     return (
         <HomeSection>
             <HomeHeader>
-                <StyledH1>Fashion</StyledH1>
+                <StyledH1>Fashionn</StyledH1>
                 <HeaderRight>
                     <div>New Summer Collection</div>
                     <div>Get now and empty your summer vacation</div>
