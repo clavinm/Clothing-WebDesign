@@ -82,6 +82,7 @@ export default function Home() {
   const history = useHistory();
 
   const handleImageCaptureClick = () => {
+    console.log('Image Capture Clicked');
     history.push('/capture');
   };
     return (
