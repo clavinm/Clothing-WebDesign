@@ -88,7 +88,6 @@ const ImageCapturePage = () => {
     const fetchCameras = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        console.log('Devices:', devices);
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         if (videoDevices.length > 0) {
           setCameraDevices(videoDevices);
