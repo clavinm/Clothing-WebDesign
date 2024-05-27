@@ -2,30 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
-`;
-
-const VideoContainer = styled.div`
-  margin-bottom: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: auto;
 `;
 
 const Video = styled.video`
   width: 100%;
   max-width: 300px;
+  margin-bottom: 20px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+const Canvas = styled.canvas`
+  display: none;
 `;
 
 const Button = styled.button`
@@ -35,6 +24,7 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 5px;
   transition: background-color 0.3s;
 
   &:hover {
@@ -42,24 +32,15 @@ const Button = styled.button`
   }
 `;
 
-const Select = styled.select`
-  padding: 10px;
-  margin-bottom: 20px;
-`;
-
-const ImageContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
 const Image = styled.img`
   width: 100%;
   max-width: 300px;
+  margin: 20px 0;
 `;
 
 const DownloadLink = styled.a`
   display: block;
   margin-top: 10px;
-  text-decoration: none;
   color: #007bff;
   cursor: pointer;
 
@@ -68,21 +49,16 @@ const DownloadLink = styled.a`
   }
 `;
 
-const Canvas = styled.canvas`
-  display: none;
-`;
-
 const ImageCapturePage = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const imageContainerRef = useRef(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [videoURL, setVideoURL] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [cameraDevices, setCameraDevices] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
-  const [error, setError] = useState('');
+  const [, setNotification] = useState('');
 
   useEffect(() => {
     const fetchCameras = async () => {
@@ -93,10 +69,10 @@ const ImageCapturePage = () => {
           setCameraDevices(videoDevices);
           setSelectedCamera(videoDevices[0].deviceId);
         } else {
-          setError('No video devices found.');
+          setNotification('No video devices found.');
         }
       } catch (err) {
-        setError('Error fetching camera devices: ' + err.message);
+        setNotification('Error fetching camera devices: ' + err.message);
       }
     };
     fetchCameras();
@@ -108,31 +84,30 @@ const ImageCapturePage = () => {
     }
   }, [selectedCamera]);
 
-  const startVideoStream = (deviceId) => {
-    const videoElement = videoRef.current;
-    navigator.mediaDevices.getUserMedia({ video: { deviceId } })
-      .then((stream) => {
-        videoElement.srcObject = stream;
-        const recorder = new MediaRecorder(stream);
-        setMediaRecorder(recorder);
+  const startVideoStream = async (deviceId) => {
+    try {
+      const videoElement = videoRef.current;
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId }, audio: true });
+      videoElement.srcObject = stream;
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
 
-        const chunks = [];
+      const chunks = [];
 
-        recorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            chunks.push(event.data);
-          }
-        };
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
 
-        recorder.onstop = () => {
-          const blob = new Blob(chunks, { type: 'video/webm' });
-          const url = URL.createObjectURL(blob);
-          setVideoURL(url);
-        };
-      })
-      .catch((err) => {
-        setError('Error accessing the camera: ' + err.message);
-      });
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        setVideoURL(url);
+      };
+    } catch (err) {
+      setNotification('Error accessing the camera: ' + err.message);
+    }
   };
 
   const handleCaptureClick = () => {
@@ -150,9 +125,11 @@ const ImageCapturePage = () => {
     if (isRecording) {
       mediaRecorder.stop();
       setIsRecording(false);
+      setNotification('Recording stopped.');
     } else {
       mediaRecorder.start();
       setIsRecording(true);
+      setNotification('Recording started.');
     }
   };
 
@@ -170,39 +147,33 @@ const ImageCapturePage = () => {
 
   return (
     <Container>
-      <Title>Image and Video Capture</Title>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <Select value={selectedCamera} onChange={handleCameraChange}>
+      <h1>Image and Video Capture</h1>
+      {/* {notification && <Notification message={notification} />} */}
+      <select value={selectedCamera} onChange={handleCameraChange}>
         {cameraDevices.map(device => (
           <option key={device.deviceId} value={device.deviceId}>
             {device.label || `Camera ${device.deviceId}`}
           </option>
         ))}
-      </Select>
-      <VideoContainer>
-        <Video ref={videoRef} autoPlay></Video>
-      </VideoContainer>
-      <ButtonContainer>
-        <Button onClick={handleCaptureClick}>Capture Image</Button>
-        <Button onClick={handleStartStopRecording}>
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
-        </Button>
-      </ButtonContainer>
-      <ImageContainer ref={imageContainerRef}>
-        {imageURL && (
-          <>
-            <Image src={imageURL} alt="Captured Image" />
-            <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
-            <DownloadLink onClick={cancelImageCapture}>Cancel</DownloadLink>
-          </>
-        )}
-      </ImageContainer>
+      </select>
+      <Video ref={videoRef} autoPlay></Video>
+      <Button onClick={handleCaptureClick}>Capture Image</Button>
+      <Button onClick={handleStartStopRecording}>
+        {isRecording ? 'Stop Recording' : 'Start Recording'}
+      </Button>
+      {imageURL && (
+        <div>
+          <Image src={imageURL} alt="Captured" />
+          <DownloadLink href={imageURL} download="captured-image.png">Download Image</DownloadLink>
+          <Button onClick={cancelImageCapture}>Cancel</Button>
+        </div>
+      )}
       <Canvas ref={canvasRef}></Canvas>
       {videoURL && (
         <div>
           <Video src={videoURL} controls></Video>
           <DownloadLink href={videoURL} download="captured-video.webm">Download Video</DownloadLink>
-          <DownloadLink onClick={cancelVideoCapture}>Cancel</DownloadLink>
+          <Button onClick={cancelVideoCapture}>Cancel</Button>
         </div>
       )}
     </Container>

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 // import Row from '../components/Row';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+// import { useState } from 'react';
 
 const HomeSection = styled.section`
   background-color: #ff7900;
@@ -86,7 +87,6 @@ export default function Home() {
   const handleImageCaptureClick = () => {
     navigate('/capture');
   };
-
   return (
     <HomeSection>
       <HomeHeader>
