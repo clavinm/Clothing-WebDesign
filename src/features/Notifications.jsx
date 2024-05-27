@@ -103,7 +103,7 @@ export default function Notifications() {
 
   return (
     <Container>
-      <Title>Notification</Title>
+      <Title>Send Notification</Title>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
