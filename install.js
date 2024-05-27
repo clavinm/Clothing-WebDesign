@@ -13,7 +13,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
         if (res.outcome === 'accepted') {
           console.log('User accepted the install prompt');
           // Save the install state to local storage
-          localStorage.setItem('appInstalled', 'true');
+          localStorage.setItem('appInstalled', 'false');
           deferredPrompt = null;
           installButton.style.display = 'none';
         } else {
@@ -30,7 +30,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.addEventListener('appinstalled', () => {
     console.log('App was installed.');
     // Save the install state to local storage
-    localStorage.setItem('appInstalled', 'true');
+    localStorage.setItem('appInstalled', 'false');
     installButton.style.display = 'none';
   });
 });
